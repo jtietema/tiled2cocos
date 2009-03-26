@@ -139,9 +139,9 @@ def load_tiles(tileset_node, root_dir):
         x = 0
         while x + tile_width <= image_atlas.width:
             # Extract the relevant portion from the atlas image.
-            tile_image = image_atlas.get_region(x, y, tile_width, tile_height)            
+            tile_image = image_atlas.get_region(x, y, tile_width, tile_height)
             properties = tile_properties.get(gid, {})
-            tiles[gid] = cocos.tiles.Tile(gid, {}, tile_image)
+            tiles[gid] = cocos.tiles.Tile(gid, properties, tile_image)
             
             gid += 1
             x += tile_width + spacing
