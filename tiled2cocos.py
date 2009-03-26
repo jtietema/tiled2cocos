@@ -198,13 +198,11 @@ def create_gid_matrix(map_node):
     for layer_node in layer_nodes:
         tile_index = 0
         tile_nodes = get_first(layer_node, 'data').getElementsByTagName('tile')
-        for row in gid_matrix:
-            for col_index, col in enumerate(row):
-                tile_node = tile_nodes[tile_index]
-                gid = int(tile_node.getAttribute('gid'))
-                if gid > 0:
-                    row[col_index] = gid
-                tile_index += 1
+        for tile_node in tile_nodes:
+            gid = int(tile_node.getAttribute('gid'))
+            if gid > 0:
+                gid_matrix[tile_index // width][tile_index % width] = gid
+            tile_index += 1
 
     if any([min(row) <= 0 for row in gid_matrix]):
         raise MapException('All tile locations should be occupied.')
