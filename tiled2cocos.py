@@ -25,10 +25,14 @@ Known bugs:
 
     - A small spacing occurs between tiles when the tile size is small. I am still
       unsure if this is caused by cocos or this module.
+    - Does not support compression or base64 encoding yet, so make sure you disable
+      those settings in Tiled.
 
 Future features:
 
     - Support additional map formats (hexagonal, isometric).
+    - Support for base64 encoding.
+    - Support for gzip compression.
 """
 
 
@@ -51,6 +55,10 @@ def load_map(filename):
     doc = xml.dom.minidom.parse(filename)
 
     map_node = doc.documentElement
+    
+    # Only support orthogonal (rectangle) oriented maps for now.
+    if map_node.getAttribute('orientation') <> 'orthogonal':
+        raise MapException('tiled2cocos only supports orthogonal maps for now.')
 
     tile_width = int(map_node.getAttribute('tilewidth'))
     tile_height = int(map_node.getAttribute('tileheight'))
