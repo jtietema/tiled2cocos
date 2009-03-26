@@ -100,12 +100,15 @@ def load_tilesets(map_node, root_dir):
             tileset_doc = xml.dom.minidom.parse(os.path.join(root_dir, tileset_filename))
             real_node = tileset_doc.documentElement
             
-            # The firstgid in the tileset file is meaningless.
+            # The firstgid attribute in the external tileset file is meaningless,
+            # since there is no way for it to be relative to the other tilesets in
+            # in the map file.
             real_node.setAttribute('firstgid', tileset_node.getAttribute('firstgid'))
         else:
             real_node = tileset_node
 
         tiles.update(load_tiles(real_node, root_dir))
+    
     return tiles
 
 
@@ -116,32 +119,33 @@ def load_tiles(tileset_node, root_dir):
     tile_width = int(tileset_node.getAttribute('tilewidth'))
     tile_height = int(tileset_node.getAttribute('tileheight'))
     spacing = int(try_attribute(tileset_node, 'spacing', 0))
-    #margin = int(try_attribute(tileset_node, 'margin', 0))
+    
+    # Margin support appears to be broken in Tiled (0.7.2), so it is disabled
+    # for now.
     margin = 0
 
     image_atlas_file = get_first(tileset_node, 'image').getAttribute('source')
     image_atlas = pyglet.image.load(os.path.join(root_dir, image_atlas_file))
 
-    num_rows = (image_atlas.height - margin) // (tile_height + spacing)
-    num_columns = (image_atlas.width - margin) // (tile_width + spacing)
-
+    # Load all tile properties for this tileset in one batch, instead of querying
+    # them separately.
     tile_properties = load_tile_properties(tileset_node)
 
     gid = int(tileset_node.getAttribute('firstgid'))
-    for row_index in range(num_rows + 1):
-        for col_index in range(num_columns + 1):
-            # Extract the relevant portion from the image atlas file.
-            x = margin + col_index * (tile_width + spacing)
-            y = image_atlas.height - (margin + row_index * (tile_height + spacing)) - tile_height
-            tile_image = image_atlas.get_region(x, y, tile_width, tile_height)
-
-            if gid in tile_properties:
-                properties = tile_properties[gid]
-            else:
-                properties = {}
-
-            tiles[gid] = cocos.tiles.Tile(gid, properties, tile_image)
+    
+    # Start at the top left corner of the image.
+    y = image_atlas.height - tile_height
+    while y >= 0:
+        x = 0
+        while x + tile_width <= image_atlas.width:
+            # Extract the relevant portion from the atlas image.
+            tile_image = image_atlas.get_region(x, y, tile_width, tile_height)            
+            properties = tile_properties.get(gid, {})
+            tiles[gid] = cocos.tiles.Tile(gid, {}, tile_image)
+            
             gid += 1
+            x += tile_width + spacing
+        y -= tile_height + spacing
 
     return tiles
 
