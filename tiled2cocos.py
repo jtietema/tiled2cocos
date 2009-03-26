@@ -99,6 +99,9 @@ def load_tilesets(map_node, root_dir):
             tileset_filename = tileset_node.getAttribute('source')
             tileset_doc = xml.dom.minidom.parse(os.path.join(root_dir, tileset_filename))
             real_node = tileset_doc.documentElement
+            
+            # The firstgid in the tileset file is meaningless.
+            real_node.setAttribute('firstgid', tileset_node.getAttribute('firstgid'))
         else:
             real_node = tileset_node
 
