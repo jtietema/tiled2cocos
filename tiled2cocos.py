@@ -105,7 +105,8 @@ def load_tiles(tileset_node, root_dir):
     tile_width = int(tileset_node.getAttribute('tilewidth'))
     tile_height = int(tileset_node.getAttribute('tileheight'))
     spacing = int(try_attribute(tileset_node, 'spacing', 0))
-    margin = int(try_attribute(tileset_node, 'margin', 0))
+    #margin = int(try_attribute(tileset_node, 'margin', 0))
+    margin = 0
 
     image_atlas_file = get_first(tileset_node, 'image').getAttribute('source')
     image_atlas = pyglet.image.load(os.path.join(root_dir, image_atlas_file))
