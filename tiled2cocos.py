@@ -24,18 +24,11 @@ load_map() method in this module.
 
 This module has been tested with Tiled 0.7.2, cocos2d 0.3.0 and pyglet 1.1.3.
 
-Known bugs:
+IMPORTANT: Does not support compression or base64 encoding yet, so make sure you disable
+those settings in Tiled, as they are on by default.
 
-    - A small spacing occurs between tiles when the tile size is small. I am still
-      unsure if this is caused by cocos or this module.
-    - Does not support compression or base64 encoding yet, so make sure you disable
-      those settings in Tiled, as they are on by default.
-
-Future features:
-
-    - Support additional map formats (hexagonal, isometric).
-    - Support for base64 encoding.
-    - Support for gzip compression.
+You can find more information on this module on its Bitbucket repository:
+http://bitbucket.org/maikg/tiled2cocos/
 """
 
 
