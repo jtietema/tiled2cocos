@@ -11,8 +11,8 @@ a scene using cocos2d, proceed as follows:
     map_layer = tiled2cocos.load_map('path/to/file.tmx')
 
 As explained at http://cocos2d.org/doc/api/cocos.tiles-module.html, you can then draw your map onto
-the screen using a ScrollingManager instance, which ensures that your map can scroll and respects
-its bounds:
+the screen using a ScrollingManager instance, which ensures that your map can scroll and its
+bounds are respected:
 
     from cocos import tiles
     from cocos.director import director
