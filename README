@@ -1,0 +1,31 @@
+tiled2cocos Quick Start
+=======================
+
+This project's aim is to create a very easy to use drop-in module for cocos2d that takes care of
+deserializing your Tiled map for you.
+
+To get the appropriate MapLayer object for your Tiled map that can be rendered directly into
+a scene using cocos2d, proceed as follows:
+
+import tiled2cocos
+map_layer = tiled2cocos.load_map('path/to/file.tmx')
+
+As explained at http://cocos2d.org/doc/api/cocos.tiles-module.html, you can then draw your map onto
+the screen using a ScrollingManager instance, which ensures that your map can scroll and respects
+its bounds:
+
+from cocos import tiles
+from cocos.director import director
+from cocos.scene import Scene
+
+manager = tiles.ScrollingManager()
+manager.append(map_layer)
+
+director.run(Scene(manager))
+
+There, all done!
+
+Any comments or bug reports are very welcome, but please use the issue tracker at
+http://bitbucket.org/maikg/tiled2cocos/issues/.
+
+I hope you enjoy this module and that it saves you some time when developing your game!

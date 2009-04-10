@@ -30,9 +30,6 @@ if __name__ == '__main__':
         test_property(gray_cell.tile, 'gray', 'yes')
         test_property(gray_cell.tile, 'boring', 'a bit')
         
-        scroller = cocos.tiles.ScrollingManager()
-        scroller.add(test_map)
-        
         scenes.append(cocos.scene.Scene(test_map))
     
     scene_index = 0
