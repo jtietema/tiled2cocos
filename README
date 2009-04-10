@@ -5,7 +5,7 @@ This project's aim is to create a very easy to use drop-in module for cocos2d th
 deserializing your Tiled map for you.
 
 To get the appropriate MapLayer object for your Tiled map that can be rendered directly into
-a scene using cocos2d, proceed as follows:
+a scene, proceed as follows:
 
     import tiled2cocos
     map_layer = tiled2cocos.load_map('path/to/file.tmx')
