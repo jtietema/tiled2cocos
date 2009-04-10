@@ -36,6 +36,10 @@ import pyglet.image
 import cocos.tiles
 import xml.dom.minidom
 import os.path
+import base64
+import gzip
+from cStringIO import StringIO
+from array import array
 
 
 __all__ = ['load_map', 'MapException']
@@ -186,7 +190,8 @@ def create_gid_matrix(map_node):
     """Creates a column ordered bottom-up, left-right gid matrix by iterating over all
     the layers in the map file, overwriting all positions in the gid matrix for all non-empty
     tiles in each layer. This method also enforces that all tile spots in the final gid matrix
-    are occupied. It raises a MapException if any tile locations are not occupied."""
+    are occupied. It raises a MapException if any tile locations are not occupied, based on
+    the width and height of the map."""
     width = int(map_node.getAttribute('width'))
     height = int(map_node.getAttribute('height'))
 
@@ -194,14 +199,16 @@ def create_gid_matrix(map_node):
 
     layer_nodes = map_node.getElementsByTagName('layer')
 
-    for layer_node in layer_nodes:
-        tile_index = 0
-        tile_nodes = get_first(layer_node, 'data').getElementsByTagName('tile')
-        for tile_node in tile_nodes:
-            gid = int(tile_node.getAttribute('gid'))
+    for layer_node in layer_nodes:        
+        data_node = get_first(layer_node, 'data')
+        
+        gids = get_gids(data_node)
+        
+        for tile_index, gid in enumerate(gids):
+            # Only overwrite the current tile in this position if it contains
+            # a non-empty tile.
             if gid > 0:
                 gid_matrix[tile_index // width][tile_index % width] = gid
-            tile_index += 1
 
     if any([min(row) <= 0 for row in gid_matrix]):
         raise MapException('All tile locations should be occupied.')
@@ -212,6 +219,40 @@ def create_gid_matrix(map_node):
 def create_empty_gid_matrix(width, height):
     """Creates a matrix of the given size initialized with all zeroes."""
     return [[0] * width for row_index in range(height)]
+
+
+def get_gids(data_node):
+    """Returns all gids for the specified data node. Gids are returned in a left-right,
+    top-bottom order, as a sequence of ints. Takes care of decoding and decompression if
+    necessary."""    
+    if try_attribute(data_node, 'encoding') == 'base64':
+        data = base64.b64decode(get_text_contents(data_node))
+        
+        # Tiled can only do gzip compression when base64 encoding is on.
+        if try_attribute(data_node, 'compression') == 'gzip':
+            data = decompress_data(data)
+        
+        return array('L', data)
+    else:
+        # No encoding or compression.        
+        tile_nodes = data_node.getElementsByTagName('tile')
+        
+        gids = []
+        for tile_node in tile_nodes:
+            gids.append(int(tile_node.getAttribute('gid')))
+            
+        return gids
+
+
+def decompress_data(data):
+    """Decompresses a string of gzipped layer data."""
+    data_buffer = StringIO(data)
+    gzip_file = gzip.GzipFile('', 'rb', 9, data_buffer)
+    data = gzip_file.read()
+    gzip_file.close()
+    data_buffer.close()
+    
+    return data
 
 
 def rotate_matrix_ccw(matrix):

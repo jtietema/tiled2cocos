@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE map SYSTEM "http://mapeditor.org/dtd/1.0/map.dtd">
+<map version="1.0" orientation="orthogonal" width="15" height="15" tilewidth="40" tileheight="40">
+ <properties>
+  <property name="creator" value="maikg"/>
+ </properties>
+ <tileset firstgid="1" source="base.tsx"/>
+ <tileset name="spacing" firstgid="5" tilewidth="40" tileheight="40" spacing="10">
+  <image source="spacing.png"/>
+  <tile id="0">
+   <properties>
+    <property name="boring" value="a bit"/>
+    <property name="gray" value="yes"/>
+   </properties>
+  </tile>
+ </tileset>
+ <!-- Layer data is compressed (GZip) binary data, encoded in Base64 -->
+ <layer name="Layer 0" width="15" height="15">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAAKXSOQ4AIAgAQUQ8/v9iLSgsjIG12FiYKVBURPSjDjptTXSzM9DLjkcRWy5lbNuZn1mr7hRY8zsDls5L35n+L90rus+0BeJLGIyEAwAA
+  </data>
+ </layer>
+</map>
