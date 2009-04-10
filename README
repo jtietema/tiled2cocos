@@ -7,21 +7,21 @@ deserializing your Tiled map for you.
 To get the appropriate MapLayer object for your Tiled map that can be rendered directly into
 a scene using cocos2d, proceed as follows:
 
-import tiled2cocos
-map_layer = tiled2cocos.load_map('path/to/file.tmx')
+    import tiled2cocos
+    map_layer = tiled2cocos.load_map('path/to/file.tmx')
 
 As explained at http://cocos2d.org/doc/api/cocos.tiles-module.html, you can then draw your map onto
 the screen using a ScrollingManager instance, which ensures that your map can scroll and respects
 its bounds:
 
-from cocos import tiles
-from cocos.director import director
-from cocos.scene import Scene
+    from cocos import tiles
+    from cocos.director import director
+    from cocos.scene import Scene
 
-manager = tiles.ScrollingManager()
-manager.append(map_layer)
+    manager = tiles.ScrollingManager()
+    manager.append(map_layer)
 
-director.run(Scene(manager))
+    director.run(Scene(manager))
 
 There, all done!
 
