@@ -112,7 +112,9 @@ def load_tilesets(map_node, root_dir):
             # and replace tileset_node with the root element of that file, which
             # is also a tileset node with the same structure.
             tileset_filename = tileset_node.getAttribute('source')
-            tileset_doc = xml.dom.minidom.parse(os.path.join(root_dir, tileset_filename))
+            tileset_file = os.path.join(root_dir, tileset_filename)
+            real_root_dir = os.path.dirname(os.path.abspath(tileset_file))
+            tileset_doc = xml.dom.minidom.parse(tileset_file)
             real_node = tileset_doc.documentElement
             
             # The firstgid attribute in the external tileset file is meaningless,
@@ -121,8 +123,9 @@ def load_tilesets(map_node, root_dir):
             real_node.setAttribute('firstgid', tileset_node.getAttribute('firstgid'))
         else:
             real_node = tileset_node
+            real_root_dir = root_dir
 
-        tiles.update(load_tiles(real_node, root_dir))
+        tiles.update(load_tiles(real_node, real_root_dir))
     
     return tiles
 
